@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.Console;
 import java.util.List;
 
 @Controller
@@ -57,6 +56,13 @@ public class ManageController {
     @ResponseBody
     public List<BaseAttrInfo> attrInfoList(String catalog3Id){
         return manageService.getAttrList(catalog3Id);
+    }
+
+    //  "saveAttrInfo",attrJson,
+    @RequestMapping("/saveAttrInfo")
+    @ResponseBody
+    public void saveAttrInfo(BaseAttrInfo baseAttrInfo){
+        manageService.saveAttrInfo(baseAttrInfo);
     }
 
 }
