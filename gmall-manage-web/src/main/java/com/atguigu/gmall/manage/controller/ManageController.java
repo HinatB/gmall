@@ -88,5 +88,19 @@ public class ManageController {
         return spuInfoList;
     }
 
+    @RequestMapping("/baseSaleAttrList")
+    @ResponseBody
+    public List<BaseSaleAttr> baseSaleAttrList(){
+        List<BaseSaleAttr> baseSaleAttrList = manageService.getBaseSaleAttrList();
+        return baseSaleAttrList;
+    }
+
+    // saveSpuInfo
+    @RequestMapping("/saveSpuInfo")
+    @ResponseBody
+    public String saveSpuInfo(SpuInfo spuInfo){
+        manageService.saveSpuInfo(spuInfo);
+        return  "success";
+    }
 
 }

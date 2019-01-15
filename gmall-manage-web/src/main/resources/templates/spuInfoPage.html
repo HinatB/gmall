@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <!--<div th:include="spuSaleAttrPage"></div>-->
+        <div th:include="spuSaleAttrPage"></div>
 
     </form>
 </div>
@@ -60,6 +60,82 @@
 
 </body>
 <script type="text/javascript">
+    
+    //保存spu
+    function saveSpu() {
+        // spuInfo: spuImage: spuSaleAttr: spuSaleAttrValue
+        // 声明spuInfo 对象
+        var spuInfo = {};
+//    spuInfo 实体类中的属性
+//    private String id;
+//    private String spuName;
+//    private String description;
+//    private  String catalog3Id;
+//    private List<SpuImage> spuImageList;
+//    private List<SpuSaleAttr> spuSaleAttrList;
+
+        spuInfo["id"] = $("#spuId").val();
+        spuInfo["spuName"] = $("#spuName").val();
+        spuInfo["description"] = $("#description").val();
+        spuInfo["catalog3Id"] = $("#ctg3ForSpuList").combobox('getValue');
+
+        // 获取图片集合
+        // 封装 private List<SpuImage> spuImageList;
+        var spuImgDgRows  = $("#spuImgDg").datagrid('getRows');
+        for (var i = 0; i < spuImgDgRows.length; i++) {
+            // 包含
+//        SpuImage
+//        private String id; 自增
+//        private String spuId; spuInfo.id
+//        private String imgName;
+//        private String imgUrl;
+            spuInfo["spuImageList[" + i + "].imgName"] = spuImgDgRows[i].imgName;
+            spuInfo["spuImageList[" + i + "].imgUrl"] = spuImgDgRows[i].imgUrl;
+        }
+        // 封装 private List<SpuSaleAttr> spuSaleAttrList; 集合里是SpuSaleAttr
+        var spuSaleAttrDgRows = $("#spuSaleAttrDg").datagrid('getRows');
+        for (var i = 0; i < spuSaleAttrDgRows.length; i++) {
+//        封装 SpuSaleAttr
+//        String id ;
+//        String spuId;
+//        String saleAttrId;
+//        String saleAttrName;
+//        List<SpuSaleAttrValue> spuSaleAttrValueList;
+            spuInfo["spuSaleAttrList["+i+"].saleAttrId"] = spuSaleAttrDgRows[i].saleAttrId;
+            spuInfo["spuSaleAttrList["+i+"].saleAttrName"] = spuSaleAttrDgRows[i].saleAttrName;
+            // 封装SpuSaleAttr的 List<SpuSaleAttrValue> spuSaleAttrValueList;
+            var saleAttrValueRows = spuSaleAttrDgRows[i].spuSaleAttrValueJson.rows;
+            for (var j = 0; j < saleAttrValueRows.length; j++) {
+//            SpuSaleAttrValue
+//            String id ; 自增
+//            String spuId; spuInfo.id
+//            String saleAttrId;
+//            String saleAttrValueName;
+                spuInfo["spuSaleAttrList["+ i +"].spuSaleAttrValueList["+ j +"].saleAttrId"] = spuSaleAttrDgRows[i].saleAttrId;
+                spuInfo["spuSaleAttrList["+ i +"].spuSaleAttrValueList["+ j +"].saleAttrValueName"] = saleAttrValueRows[j].saleAttrValueName;
+            }
+        }
+        console.log(JSON.stringify(spuInfo));
+            // 先写控制器
+        $.post("saveSpuInfo",spuInfo,function (data) {
+            // 关闭模态框
+            $("#spu_dlg").dialog('close');
+            // 加载数据列表
+            $("#spulist_dg").datagrid('reload');
+        })
+    }
+
+    //弹出添加销售属性的模态框
+    function addSpuSaleAttr() {
+        initSpuSaleAttrDlg();
+    }
+    // 编辑销售属性
+    function editSpuSaleAttr() {
+        var spuId= $("#spuId").val();
+        var spuSaleAttr = $('#spuSaleAttrDg').datagrid('getSelected');
+        initSpuSaleAttrDlg(spuId,spuSaleAttr);
+    }
+
     // 初始化方法
     function initSpuInfoDlg(spuInfo) {
         $("#spu_dlg").dialog('open');
@@ -210,7 +286,7 @@
         $('#spuImgUploadBtn').click(function(){
             console.log("开始上传");
             if(spuImgUploader.getFiles().length<=0){
-                $.messager().alert('警告','没有需要上传的文件','warning');
+                //$.messager().alert('警告','没有需要上传的文件','warning');
                 return;
             }
             spuImgUploader.upload();
