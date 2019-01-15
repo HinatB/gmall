@@ -1,9 +1,6 @@
 package com.atguigu.gmall.service;
 
-import com.atguigu.gmall.bean.BaseAttrInfo;
-import com.atguigu.gmall.bean.BaseCatalog1;
-import com.atguigu.gmall.bean.BaseCatalog2;
-import com.atguigu.gmall.bean.BaseCatalog3;
+import com.atguigu.gmall.bean.*;
 
 import java.util.List;
 
@@ -18,4 +15,8 @@ public interface ManageService {
     List<BaseAttrInfo> getAttrList(String catalog3Id);
 
     void saveAttrInfo(BaseAttrInfo baseAttrInfo);
+
+    BaseAttrInfo getattrInfo(String attrId);
+
+    List<SpuInfo> getSpuInfoList(SpuInfo spuInfo);
 }

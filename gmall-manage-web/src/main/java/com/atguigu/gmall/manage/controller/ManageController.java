@@ -1,10 +1,7 @@
 package com.atguigu.gmall.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.gmall.bean.BaseAttrInfo;
-import com.atguigu.gmall.bean.BaseCatalog1;
-import com.atguigu.gmall.bean.BaseCatalog2;
-import com.atguigu.gmall.bean.BaseCatalog3;
+import com.atguigu.gmall.bean.*;
 import com.atguigu.gmall.service.ManageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +11,7 @@ import java.util.List;
 
 @Controller
 public class ManageController {
+
 
     @Reference
     private ManageService manageService;
@@ -64,5 +62,31 @@ public class ManageController {
     public void saveAttrInfo(BaseAttrInfo baseAttrInfo){
         manageService.saveAttrInfo(baseAttrInfo);
     }
+
+    //  getAttrValueList?attrId=  列出编辑 平台属性值getAttrValueList?attrId=46
+    @RequestMapping("/getAttrValueList")
+    @ResponseBody
+    public List<BaseAttrValue> getAttrValueListByattrId(String attrId){
+
+        BaseAttrInfo baseAttrInfo = manageService.getattrInfo(attrId);
+        return baseAttrInfo.getAttrValueList();
+    }
+
+    //  spuListPage 跳转spuListPage页面
+    @RequestMapping("/spuListPage")
+    public String toSpuListPage(){
+        return "spuListPage";
+    }
+
+    // getSpuInfoList?ctg3Id= 得到supinfo集合
+    @RequestMapping("/getSpuInfoList")
+    @ResponseBody
+    public List<SpuInfo> getSpuInfoList(String ctg3Id){
+        SpuInfo spuInfo = new SpuInfo();
+        spuInfo.setCatalog3Id(ctg3Id);
+        List<SpuInfo> spuInfoList = manageService.getSpuInfoList(spuInfo);
+        return spuInfoList;
+    }
+
 
 }

@@ -18,7 +18,7 @@
 <div id="tb" style="padding:5px;height:auto">
     <div style="margin-bottom:5px">
         <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addAttrInfo()">添加</a>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true">编辑</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editAttrInfo()">编辑</a>
         <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
@@ -66,24 +66,47 @@
         * 1 向attrInfo里存的catalog3Id（要存到的分类id）和 attrName（属性名）
         * 3 向attrValue里存的valueName（属性值）
         * */
-        var attrJson = {};
+        var baseAttrInfo = {};
+
+        baseAttrInfo["id"]=$("#attrId").val();
+        /*存attrName*/
+        baseAttrInfo["attrName"]=$("#attrName").val();
+        /*存catalog3Id*/
+        baseAttrInfo["catalog3Id"]=$("#ctg3ForAttrList").combobox('getValue');
+
         var attrValueRows = $("#dg_av").datagrid('getRows');
         for (var i=0; i<attrValueRows.length; i++) {
-            attrJson["attrValueList["+i+"].id"]=attrValueRows[i].id;
+            baseAttrInfo["attrValueList["+i+"].id"]=attrValueRows[i].id;
             /*循环存所有的valueName*/
-            attrJson["attrValueList["+i+"].valueName"]=attrValueRows[i].valueName;
+            baseAttrInfo["attrValueList["+i+"].valueName"]=attrValueRows[i].valueName;
         }
-        attrJson["attrId"]=$("attrId").val();
-        /*存attrName*/
-        attrJson["attrName"]=$("#attrName").val();
-        /*存catalog3Id*/
-        attrJson["catalog3Id"]=$("#ctg3ForAttrList").combobox('getValue');
+
 
         //ajax 保存到后台
-        $.post("saveAttrInfo",attrJson,function(data){
+        $.post("saveAttrInfo",baseAttrInfo,function(data){
             $("#dlg").dialog("close");
             $("#dg").datagrid("reload");
         })
+    }
+
+    /*编辑平台属性值*/
+    function editAttrInfo() {
+        if (!checkBeforeDialog()){
+            return;
+        }
+
+        $("#dlg").dialog('open');
+
+        var attrInfoRow = $("#dg").datagrid('getSelected');
+        /*给id和attrName赋值*/
+        $("#attrName").textbox('setValue',attrInfoRow.attrName);
+        $("#attrId").val(attrInfoRow.id);
+
+        /*把属性值列出*/
+        $("#dg_av").datagrid({url:'getAttrValueList?attrId='+attrInfoRow.id});
+        initAttrValueDatagrid();
+
+
     }
 
     function reloadAttrList() {
@@ -118,7 +141,7 @@
         // 加载旧数据行
         $('#dg_av').datagrid('loadData', { total: 0, rows: [] });
 
-        var datagrid = $('#dg_av').datagrid({
+        datagrid = $('#dg_av').datagrid({
             columns:[[
                 {field:'id',title:'编号', width:'20%'},
                 {field:'valueName',title:'属性值名称', width:'80%',
