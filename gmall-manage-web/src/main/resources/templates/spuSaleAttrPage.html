@@ -42,11 +42,15 @@
     // 点击确定  保存销售属性值
     function saveSpuSaleAttr() {
 
+        // 获取加载的数据
         var spuSaleAttrValueJson= $('#spuSaleAttrValueDg').datagrid('getData');
+        //获取组件的值
         var saleAttrId=$('#saleAttrSelect').combobox("getValue");
+        // 获取输入的文本
         var saleAttrName=$('#saleAttrSelect').combobox("getText");
 
         // spuSaleAttrDg 销售属性列表 看销售属性列表中有没有当前编辑的属性  有则删除再添加
+        // ("getRowIndex",saleAttrId) 根据参数（id）找到指定行索引号
         var rowIndex = $("#spuSaleAttrDg").datagrid("getRowIndex",saleAttrId);
         if (rowIndex >= 0){
             //删除

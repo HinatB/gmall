@@ -103,4 +103,13 @@ public class ManageController {
         return  "success";
     }
 
+    //  spuSaleAttrList?spuId
+    @RequestMapping("/spuSaleAttrList")
+    @ResponseBody
+    public List<SpuSaleAttr> spuSaleAttrList(String spuId){
+        List<SpuSaleAttr> spuSaleAttrList = manageService.getSpuSaleAttrList(spuId);
+        System.out.println("a");
+        return  spuSaleAttrList;
+    }
+
 }
