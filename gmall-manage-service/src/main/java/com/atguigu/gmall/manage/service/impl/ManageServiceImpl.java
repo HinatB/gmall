@@ -31,6 +31,14 @@ public class ManageServiceImpl implements ManageService {
     private SpuSaleAttrMapper spuSaleAttrMapper;
     @Autowired
     private SpuSaleAttrValueMapper spuSaleAttrValueMapper;
+    @Autowired
+    private SkuInfoMapper skuInfoMapper;
+    @Autowired
+    private SkuAttrValueMapper skuAttrValueMapper;
+    @Autowired
+    private SkuImageMapper skuImageMapper;
+    @Autowired
+    private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
 
     @Override
     public List<BaseCatalog1> getCatalog1() {
@@ -188,5 +196,60 @@ public class ManageServiceImpl implements ManageService {
         return spuSaleAttrMapper.selectSpuSaleAttrList(Long.parseLong(spuId));
     }
 
+    @Override
+    public void saveSkuInfo(SkuInfo skuInfo) {
+        // 保存skuInfo
+        if (skuInfo.getId()==null || skuInfo.getId().length()==0){
+            // 添加 SkuInfo
+            skuInfo.setId(null);
+            skuInfoMapper.insertSelective(skuInfo);
+        } else {
+            skuInfoMapper.updateByPrimaryKeySelective(skuInfo);
+        }
 
+        // 保存skuImage 先删除后添加
+        SkuImage skuImage = new SkuImage();
+        skuImage.setSkuId(skuInfo.getId());
+        skuImageMapper.delete(skuImage);
+        //id;自增
+        //String skuId;后台获取
+        List<SkuImage> skuImageList = skuInfo.getSkuImageList();
+        if (skuImageList!=null && skuImageList.size()>0){
+            for (SkuImage image : skuImageList) {
+                image.setId(null);
+                image.setSkuId(skuInfo.getId());
+                skuImageMapper.insertSelective(image);
+            }
+        }
+
+
+        // 保存平台属性 先删除后添加
+        SkuAttrValue skuAttrValue = new SkuAttrValue();
+        skuAttrValue.setSkuId(skuInfo.getId());
+        skuAttrValueMapper.delete(skuAttrValue);
+
+        List<SkuAttrValue> skuAttrValueList = skuInfo.getSkuAttrValueList();
+        if (skuAttrValueList!=null && skuAttrValueList.size()>0){
+            for (SkuAttrValue attrValue : skuAttrValueList) {
+                attrValue.setId(null);
+                attrValue.setSkuId(skuInfo.getId());
+                skuAttrValueMapper.insertSelective(attrValue);
+            }
+        }
+
+
+        // 保存销售属性 先删除后添加
+        SkuSaleAttrValue skuSaleAttrValue = new SkuSaleAttrValue();
+        skuSaleAttrValue.setSkuId(skuInfo.getId());
+        skuSaleAttrValueMapper.delete(skuSaleAttrValue);
+
+        List<SkuSaleAttrValue> skuSaleAttrValueList = skuInfo.getSkuSaleAttrValueList();
+        if (skuSaleAttrValueList!=null && skuSaleAttrValueList.size()>0){
+            for (SkuSaleAttrValue saleAttrValue : skuSaleAttrValueList) {
+                saleAttrValue.setId(null);
+                saleAttrValue.setSkuId(skuInfo.getId());
+                skuSaleAttrValueMapper.insertSelective(saleAttrValue);
+            }
+        }
+    }
 }

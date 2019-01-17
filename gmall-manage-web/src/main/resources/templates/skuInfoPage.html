@@ -59,6 +59,100 @@
 
 </body>
 <script type="text/javascript">
+
+    function saveSku() {
+        var skuInfo={};
+        /*String id;
+        String spuId;
+        BigDecimal price;
+        String skuName;
+        BigDecimal weight;
+        String skuDesc;
+        String catalog3Id;
+
+        String skuDefaultImg;
+
+        List<SkuImage> skuImageList;
+        List<SkuAttrValue> skuAttrValueList;
+        List<SkuSaleAttrValue> skuSaleAttrValueList;*/
+
+        skuInfo["id"]=$("#skuId").val();
+        skuInfo["spuId"]=$("#spuIdForSku").val();
+        skuInfo["price"]=$("#price").val();
+        skuInfo["skuName"]=$("#skuName").val();
+        skuInfo["weight"]=$("#weight").val();
+        skuInfo["skuDesc"]=$("#skuDesc").val();
+        skuInfo["catalog3Id"]=$("#catalog3IdForSku").val();
+
+        // 关闭图片部分的编辑
+        skuImgDgendEdit();
+        // 封装 sku图片 List<SkuImage> skuImageList;
+        /*String id;自增
+        String skuId;后台获取
+        String imgName;
+        String imgUrl;
+        String spuImgId;
+        String isDefault;*/
+        var skuImgDgRows = $("#skuImgDg").datagrid('getChecked');
+        for (var i = 0; i < skuImgDgRows.length; i++) {
+            skuInfo["skuImageList["+i+"].imgName"] = skuImgDgRows[i].imgName;
+            skuInfo["skuImageList["+i+"].imgUrl"] = skuImgDgRows[i].imgUrl;
+            if (skuImgDgRows[i].isDefault == '1'){
+                skuInfo["skuDefaultImg"] = skuImgDgRows[i].imgUrl;
+            }
+            skuInfo["skuImageList["+i+"].spuImgId"] = skuImgDgRows[i].id;
+            skuInfo["skuImageList["+i+"].isDefault"] = skuImgDgRows[i].isDefault;
+
+        }
+
+        // 封装平台属性 List<SkuAttrValue> skuAttrValueList;
+        /*String id;自增
+        String attrId;属性id
+        String valueId;属性值id
+        String skuId;后台获取*/
+        var attrInfoSelect = $("#attrInfoGroup").children("select");
+        for (var i = 0; i < attrInfoSelect.length; i++) {
+            var valueId = attrInfoSelect.eq(i).find("option:selected").val();
+            var attrId = attrInfoSelect.eq(i).attr("attrId");
+            skuInfo["skuAttrValueList["+i+"].attrId"] = attrId;
+            skuInfo["skuAttrValueList["+i+"].valueId"] = valueId;
+        }
+
+        // 封装 销售属性 List<SkuSaleAttrValue> skuSaleAttrValueList;
+        /*String id; 自增
+        String skuId;后台获取
+        String saleAttrId;
+        String saleAttrValueId;
+        String saleAttrName;
+        String saleAttrValueName;
+
+        saleAttrId    spuSaleAttrName
+        */
+        var spuSaleAttrSelect = $("#spuSaleAttrGroup").children("select");
+        for (var i = 0; i < spuSaleAttrSelect.length; i++) {
+            var saleAttrId = spuSaleAttrSelect.eq(i).attr("saleAttrId");
+            var saleAttrValueId = spuSaleAttrSelect.eq(i).find("option:selected").val();
+            var saleAttrName = spuSaleAttrSelect.eq(i).attr("spuSaleAttrName");
+            var saleAttrValueName = spuSaleAttrSelect.eq(i).find("option:selected").text();
+            skuInfo["skuSaleAttrValueList["+i+"].saleAttrId"] = saleAttrId;
+            skuInfo["skuSaleAttrValueList["+i+"].saleAttrValueId"] = saleAttrValueId;
+            skuInfo["skuSaleAttrValueList["+i+"].saleAttrName"] = saleAttrName;
+            skuInfo["skuSaleAttrValueList["+i+"].saleAttrValueName"] = saleAttrValueName;
+        }
+        console.log(JSON.stringify(skuInfo));
+
+        $.post('saveSku',skuInfo,function (data) {
+            $("#sku_dlg").dialog("close");
+        });
+    }
+
+    function skuImgDgendEdit() {
+        var rows = $("#skuImgDg").datagrid("getRows");
+        for(i=0;i<rows.length;i++){
+            $("#skuImgDg").datagrid("endEdit",i);
+        }
+    }
+
     function initSkuInfoDlg(spuId,skuInfo,catalog3Id){
         //打开对话框
         $('#sku_dlg').dialog("open");
