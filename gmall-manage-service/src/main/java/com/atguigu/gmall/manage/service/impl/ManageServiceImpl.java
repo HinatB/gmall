@@ -313,6 +313,11 @@ public class ManageServiceImpl implements ManageService {
         skuImage.setSkuId(skuInfo.getId());
         List<SkuImage> skuImageList = skuImageMapper.select(skuImage);
         skuInfo.setSkuImageList(skuImageList);
+        //查出skuAttrValue集合并赋值
+        SkuAttrValue skuAttrValue = new SkuAttrValue();
+        skuAttrValue.setSkuId(skuId);
+        List<SkuAttrValue> skuAttrValueList = skuAttrValueMapper.select(skuAttrValue);
+        skuInfo.setSkuAttrValueList(skuAttrValueList);
         return skuInfo;
     }
 
