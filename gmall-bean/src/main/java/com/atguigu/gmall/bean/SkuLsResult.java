@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class SkuLsResult implements Serializable {
     /**
-     *
+     *SkuLsInfo的集合
      */
     List<SkuLsInfo> skuLsInfoList;
     /**

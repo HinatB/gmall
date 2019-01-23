@@ -18,4 +18,10 @@ public interface ListService {
      * @return
      */
     SkuLsResult search(SkuLsParams skuLsParams);
+
+    /**
+     * 热度排名  点击增加相应skuId的热度
+     * @param skuId
+     */
+    void incrHotScore(String skuId);
 }
