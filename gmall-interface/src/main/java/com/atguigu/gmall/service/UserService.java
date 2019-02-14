@@ -20,4 +20,17 @@ public interface UserService {
      */
     List<UserAddress> findUserAddressByUserId(String userId);
 
+    /**
+     * 登录
+     * @param userInfo
+     * @return
+     */
+    UserInfo login(UserInfo userInfo);
+
+    /**
+     * 根据token中的id判断redis中是否存在
+     * @param userId
+     * @return
+     */
+    UserInfo verify(Object userId);
 }

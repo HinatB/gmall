@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.bean.SkuInfo;
 import com.atguigu.gmall.bean.SkuSaleAttrValue;
 import com.atguigu.gmall.bean.SpuSaleAttr;
+import com.atguigu.gmall.config.LoginRequire;
 import com.atguigu.gmall.service.ListService;
 import com.atguigu.gmall.service.ManageService;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class ItemController {
 
 
     @RequestMapping("{skuId}.html")
+    //@LoginRequire(autoRedirect=true)
     public String skuInfoPage(@PathVariable("skuId") String skuId, Model model){
         SkuInfo skuInfo = manageService.getSkuInfo(skuId);
         List<SkuSaleAttrValue> skuSaleAttrValueList = manageService.getSkuSaleAttrValueListBySpu(skuInfo.getSpuId());
