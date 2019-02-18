@@ -1,6 +1,7 @@
 package com.atguigu.gmall.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.bean.SkuInfo;
 import com.atguigu.gmall.bean.SkuLsInfo;
 import com.atguigu.gmall.service.ListService;
@@ -33,6 +34,7 @@ public class SkuManageController {
         // 拷贝属性
         BeanUtils.copyProperties(skuInfo, skuLsInfo);
         listService.saveSkuLsInfo(skuLsInfo);
+
         return "ok";
     }
 
